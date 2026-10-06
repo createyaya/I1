@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideology</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background-color: #fff;
+            color: #000;
+        }
+
+        /* ===== 黑色顶栏：品牌Logo + 主导航 ===== */
+        .site-header {
+            background-color: #000;
+            padding: 18px 0 0;
+            position: fixed; /* 大黑条固定在最上方，完全不参与滚动 */
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        /* 正文白色部分：独立滚动空间 */
+        #site-main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            overflow-y: auto;
+        }
+
+        .site-logo {
+            text-align: center;
+            color: #fff;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 26px;
+            font-style: italic;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px 28px;
+            padding: 0 12px 14px;
+        }
+
+        .main-nav li {
+            cursor: pointer;
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #fff;
+            transition: opacity 0.2s;
+            position: relative;
+            padding-bottom: 6px;
+        }
+
+        .main-nav li:hover {
+            opacity: 0.65;
+        }
+
+        .main-nav li.active {
+            font-weight: 500;
+        }
+
+        .main-nav li.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #fff;
+        }
+
+        /* ===== 栏目大标题（VOGUE: 64px, 上54 下40） ===== */
+        .category-hero {
+            text-align: center;
+        }
+
+        .category-hero h1 {
+            font-size: 64px;
+            font-weight: normal;
+            margin: 0 auto;
+            max-width: 1470px;
+            padding: 54px 20px 40px;
+        }
+
+        /* 子导航（专题标题行，VOGUE h2: 32px 居中） */
+        .sub-nav {
+            text-align: center;
+            padding: 0 20px;
+            margin-bottom: 30px;
+        }
+
+        .sub-nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px 30px;
+        }
+
+        .sub-nav li {
+            cursor: pointer;
+            font-size: 32px;
+            font-weight: 500;
+            letter-spacing: 0.08px;
+            color: #000;
+            transition: opacity 0.2s;
+        }
+
+        .sub-nav li:hover {
+            opacity: 0.55;
+        }
+
+        .sub-nav li.active {
+            text-decoration: underline;
+            text-underline-offset: 10px;
+            text-decoration-thickness: 3px;
+        }
+
+        /* ===== 卡片区容器（VOGUE: max-width 1470, 左右45px） ===== */
+        .card-section {
+            max-width: 1470px;
+            margin: 0 auto;
+            padding: 0 45px;
+        }
+
+        /* 卡片区：row5，一行5张（VOGUE: 19%宽 上限280 列距1.25%） */
+        .card-grid.row5 {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .card-grid.row5 .brand-card {
+            width: 19%;
+            max-width: 280px;
+            margin-right: 1.25%;
+            margin-bottom: 38px;
+        }
+
+        .card-grid.row5 .brand-card:nth-child(5n) {
+            margin-right: 0;
+        }
+
+        /* ===== 卡片 ===== */
+        .brand-card {
+            cursor: pointer;
+        }
+
+        .brand-card .card-img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: cover; /* 统一裁切到2:3，不同尺寸的卡牌不会拉伸变形 */
+            object-position: top; /* 卡牌优先保住顶部标题区 */
+            background-color: #efefef;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 0.25s;
+            margin-bottom: 20px;
+        }
+
+        .brand-card:hover .card-img {
+            opacity: 0.8;
+        }
+
+        .brand-card .card-name {
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.08px;
+            text-align: center;
+            color: #000;
+        }
+
+        /* LATEST IN 标题（VOGUE h2: 32px） */
+        .latest-title {
+            font-size: 32px;
+            font-weight: 500;
+            letter-spacing: 0.08px;
+            text-align: center;
+            max-width: 1470px;
+            margin: 0 auto 30px;
+            padding: 60px 45px 0;
+        }
+
+        /* LATEST IN 分区：左侧品牌名录 + 右侧卡片 */
+        .latest-flex {
+            display: flex;
+            align-items: flex-start;
+            gap: 45px;
+            max-width: 1470px;
+            margin: 0 auto;
+            padding: 0 45px;
+        }
+
+        .latest-flex .card-section {
+            flex: 1;
+            padding: 0;
+            min-width: 0;
+        }
+
+        /* ===== 品牌名录 A-Z（VOGUE: 320px宽 #707070边框） ===== */
+        .designer-directory {
+            flex: none;
+            width: 260px;
+        }
+
+        .directory-panel {
+            display: flex;
+            border: 1px solid #c0c0c0;
+            background: #fff;
+            font-family: "Avant Garde Gothic", Avantgarde, Futura, "Century Gothic", "Trebuchet MS", "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        /* 左侧：品牌列表（VOGUE: 一次显示21行=21×34px，隐藏滚动条） */
+        .directory-list {
+            flex: 1;
+            min-width: 0;
+            height: 759px; /* 20 + 21行×34 + 25(下边距，同VOGUE) */
+            overflow-y: auto;
+            padding: 20px 10px 25px 35px;
+            scrollbar-width: none;
+        }
+
+        .directory-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .directory-letter {
+            font-size: 28px;
+            font-weight: 500;
+            margin: 20px 0;
+        }
+
+        .directory-letter:first-child {
+            margin-top: 0;
+        }
+
+        .directory-letter span {
+            border-bottom: 4px solid #000;
+            padding-bottom: 2px;
+        }
+
+        .directory-list ul {
+            list-style: none;
+        }
+
+        .directory-list li {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 34px;
+            height: 34px;
+            max-width: 20ch; /* 长名截断为20个字符，同VOGUE */
+            color: #000;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .directory-list li:hover {
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        /* 右侧：A-Z 字母索引栏 */
+        .directory-rail {
+            flex: none;
+            width: 34px;
+            padding: 20px 0 65px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between; /* A-Z#均匀铺满整栏 */
+            height: 759px;
+        }
+
+        .directory-rail button {
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 400;
+            color: #000;
+            cursor: pointer;
+            padding: 2px 4px;
+            line-height: 1.2;
+        }
+
+        /* 点选品牌后展示的单品牌卡片区 */
+        .designer-view {
+            max-width: 1470px;
+            margin: 0 auto;
+            padding: 30px 45px 0;
+        }
+
+        .designer-view .designer-name {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 25px;
+        }
+
+        .designer-view .card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 38px 1.25%;
+        }
+
+        .designer-view .brand-card {
+            width: 19%;
+            max-width: 280px;
+        }
+
+        /* ===== LATEST IN 已收录品牌卡：悬停品牌标题出现整行下划线，点击进入素材页 ===== */
+        .brand-card.brand-link .card-name {
+            cursor: pointer;
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        .brand-card.brand-link .card-name::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background-color: #000;
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.25s ease;
+        }
+
+        .brand-card.brand-link .card-name:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* ===== 品牌内页（点击 LATEST IN 卡片/名录进入，hash 路由整页切换） ===== */
+        .brand-page {
+            max-width: 1470px;
+            margin: 0 auto;
+            padding: 0 45px 60px;
+        }
+
+        .bp-back {
+            display: inline-block;
+            padding: 26px 0 6px;
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .bp-back:hover {
+            opacity: 0.55;
+        }
+
+        .bp-title {
+            font-size: 52px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-align: center;
+            margin: 18px 0 34px;
+        }
+
+        .bp-label {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .bp-label span {
+            display: inline-block;
+            border: 1px solid #000;
+            padding: 16px 54px;
+            font-size: 20px;
+            letter-spacing: 12px;
+            text-indent: 12px; /* 平衡末字字距，让文字在框内居中 */
+        }
+
+        .brand-page .assets-grid {
+            column-count: 3;
+            column-gap: 16px;
+        }
+
+        .brand-page .asset-item {
+            break-inside: avoid;
+            margin: 0 0 18px;
+        }
+
+        .brand-page .asset-item img {
+            width: 100%;
+            display: block;
+            cursor: zoom-in;
+            background-color: #efefef;
+            transition: opacity 0.25s;
+        }
+
+        .brand-page .asset-item img:hover {
+            opacity: 0.85;
+        }
+
+        .brand-page .asset-item figcaption {
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            color: #8a8a8a;
+            padding: 8px 2px 0;
+        }
+
+        /* ===== 我的名录：卡片一~五（点击收录 LATEST IN 品牌与素材图） ===== */
+        .my-card {
+            position: relative;
+        }
+
+        .my-card-empty {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            border: 1px dashed #b5b5b5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #9a9a9a;
+            background-color: #fafafa;
+            transition: border-color 0.2s, color 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .my-card:hover .my-card-empty {
+            border-color: #000;
+            color: #000;
+        }
+
+        .my-card-empty .plus {
+            font-size: 36px;
+            font-weight: 200;
+            line-height: 1;
+        }
+
+        .my-card-empty .hint {
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+
+        .my-card-filled {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            background-size: cover;
+            background-position: top;
+            background-color: #efefef;
+            transition: opacity 0.25s;
+            margin-bottom: 20px;
+        }
+
+        .my-card:hover .my-card-filled {
+            opacity: 0.85;
+        }
+
+        .my-card .card-name {
+            cursor: pointer;
+        }
+
+        .my-card-tools {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: none;
+            gap: 6px;
+            z-index: 2;
+        }
+
+        .my-card:hover .my-card-tools {
+            display: flex;
+        }
+
+        .my-card-tools button {
+            border: none;
+            background-color: rgba(0, 0, 0, 0.78);
+            color: #fff;
+            font-size: 11px;
+            letter-spacing: 1px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .my-card-tools button:hover {
+            background-color: #000;
+        }
+
+        /* 弹出选择器：选品牌 → 选素材图 */
+        #card-picker {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 250;
+        }
+
+        #card-picker.open {
+            display: flex;
+        }
+
+        .picker-panel {
+            background-color: #fff;
+            width: min(940px, 92vw);
+            max-height: 86vh;
+            overflow-y: auto;
+            padding: 30px 34px 34px;
+            position: relative;
+        }
+
+        .picker-title {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            margin-bottom: 22px;
+        }
+
+        .picker-close {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            border: none;
+            background: none;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .picker-brands {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .picker-brands button {
+            border: 1px solid #000;
+            background-color: #fff;
+            color: #000;
+            padding: 9px 20px;
+            font-size: 13px;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .picker-brands button.active {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .picker-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .picker-grid .picker-thumb {
+            width: calc(25% - 9px);
+            cursor: pointer;
+        }
+
+        .picker-grid .picker-thumb img {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            object-position: top;
+            display: block;
+            background-color: #efefef;
+        }
+
+        .picker-grid .picker-thumb:hover img {
+            outline: 2px solid #000;
+        }
+
+        .picker-grid .picker-thumb figcaption {
+            font-size: 11px;
+            color: #8a8a8a;
+            padding: 6px 2px 0;
+        }
+
+        /* 灯箱：点击素材大图预览，点击任意处关闭 */
+        #lightbox {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.93);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            cursor: zoom-out;
+        }
+
+        #lightbox.open {
+            display: flex;
+        }
+
+        #lightbox img {
+            max-width: 92vw;
+            max-height: 92vh;
+        }
+
+        /* 手机端适配（VOGUE 750px断点：边距20px） */
+        @media (max-width: 768px) {
+            .site-logo {
+                font-size: 20px;
+                margin-bottom: 10px;
+            }
+
+            .main-nav ul {
+                gap: 6px 16px;
+            }
+
+            .main-nav li {
+                font-size: 12px;
+            }
+
+            .category-hero h1 {
+                font-size: 32px;
+                padding: 40px 16px 30px;
+            }
+
+            .sub-nav li {
+                font-size: 16px;
+            }
+
+            .card-section {
+                padding: 0 20px;
+            }
+
+            /* LATEST区：手机端一行2张（VOGUE: 48%） */
+            .card-grid.row5 .brand-card {
+                width: 48%;
+                max-width: 320px;
+                margin-right: 0;
+                margin-bottom: 34px;
+            }
+
+            .brand-card .card-img {
+                margin-bottom: 10px;
+            }
+
+            .brand-card .card-name {
+                font-size: 15px;
+            }
+
+            .latest-title {
+                font-size: 20px;
+                padding-top: 45px;
+            }
+
+            /* LATEST IN：手机端名录在上方占满宽 */
+            .latest-flex {
+                flex-direction: column;
+                gap: 24px;
+                padding: 0 20px;
+            }
+
+            .designer-directory {
+                width: 100%;
+            }
+
+            .directory-list {
+                padding: 14px 10px 20px 20px;
+                height: 622px; /* 14 + 21行×28 + 20(下边距) */
+            }
+
+            .directory-letter {
+                font-size: 16px;
+                margin: 12px 0;
+            }
+
+            .directory-letter span {
+                border-bottom-width: 3px;
+            }
+
+            .directory-list li {
+                font-size: 12px;
+                line-height: 28px;
+                height: 28px;
+            }
+
+            .designer-view {
+                padding: 25px 20px 0;
+            }
+
+            .designer-view .designer-name {
+                font-size: 20px;
+            }
+
+            .designer-view .brand-card {
+                width: 31.5%;
+            }
+
+            .brand-page {
+                padding: 0 20px 40px;
+            }
+
+            .bp-title {
+                font-size: 28px;
+            }
+
+            .bp-label span {
+                font-size: 14px;
+                letter-spacing: 8px;
+                text-indent: 8px;
+                padding: 12px 30px;
+            }
+
+            .brand-page .assets-grid {
+                column-count: 2;
+            }
+
+            .picker-grid .picker-thumb {
+                width: calc(50% - 6px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 黑色顶栏：Logo + 主导航 -->
+    <header class="site-header">
+        <div class="site-logo">Me &amp; The Radiant Firmament</div>
+        <nav class="main-nav">
+            <ul>
+                <li data-category="brand" class="active">品牌 BRAND</li>
+                <li data-category="art">艺术 ART</li>
+                <li data-category="city">城史 CITY</li>
+                <li data-category="home">家居 HOME</li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 栏目内容由JS按配置渲染 -->
+    <main id="site-main"></main>
+
+    <script>
+        // ===== 站点内容配置：想改名字/图片/增删卡片，改这里即可 =====
+        const SITE_DATA = {
+            brand: {
+                navName: '品牌 BRAND',
+                hero: 'BRAND 品牌',
+                subpages: [
+                    { name: '子页一', cards: ['卡片一', '卡片二', '卡片三', '卡片四', '卡片五'] },
+                    { name: '子页二', cards: ['卡片一', '卡片二', '卡片三', '卡片四', '卡片五'] },
+                    { name: '子页三', cards: ['卡片一', '卡片二', '卡片三', '卡片四', '卡片五'] }
+                ],
+                latestCards: ['Ann Demeulemeester', 'Iris van Herpen', 'Rick Owens', 'Dries Van Noten', '卡片五'],
+                // 秀场品牌名录（A-Z自动分组排序）：在这里增删品牌名即可
+                designers: [
+                    "Alexa Chung", "A Détacher", "A--Company", "A. Potts",
+                    "A.F. Vandevorst", "A.L.C.", "A.P.C.", "A.W.A.K.E. Mode",
+                    "Aalto", "Aaron Esh", "Abra", "Acne",
+                    "Acne Studios", "Act No.1", "Adam", "Adam Lippes",
+                    "Adam Selman", "Adam Selman Sport", "Adeam", "Adidas by Stella McCartney",
+                    "AG", "Aganovich", "Agi&Sam", "AGL",
+                    "Agnes B", "Agnona", "Ahluwalia", "Akris",
+                    "Alabama Chanin", "Alaïa", "Alainpaul", "Alberta Ferretti",
+                    "Albino", "Albino Teodoro", "Alejandra Alonso Rojas", "Alena Akhmadullina",
+                    "Alessandra Rich", "Aletta", "Alexa-Chung", "Alexander Lewis",
+                    "Alexander McQueen", "Alexander Wang", "Alexandre Herchcovitch", "Alexandre Plokhov",
+                    "Alexandre Vauthier", "Alexis Mabille", "Alice + Olivia", "Alice Archer",
+                    "Aliette", "Alighieri", "All-In", "Altuzarra",
+                    "alyx", "Amanda Wakeley", "Ambush", "Ami",
+                    "Amiri", "And Re Walker", "Andrea Pompilio", "Andreadamo",
+                    "Andreas Kronthaler For Vivienne Westwood", "Andrew Gn", "Angel Chen", "Angelos Bratis",
+                    "Ann Demeulemeester", "Ann-Sofie Back Atelje", "Anna October", "Anna Sui",
+                    "Annakiki", "Anne Valérie Hash", "Anonlychild", "ANREALAGE",
+                    "Anteprima", "Anthony Vaccarello", "Antonio Berardi", "Antonio Grimaldi",
+                    "Antonio Marras", "Anya Hindmarch", "aouadi", "Apiece Apart",
+                    "Aquascutum", "Aquilano Rimondi", "Araks", "ArdAzAei",
+                    "area", "Arje", "Armani Privé", "Armarium",
+                    "Art School", "Arthur Arbesser", "Asai", "Ashish",
+                    "Ashley Williams", "Ashlyn", "ASPESI", "Assembly",
+                    "Atelier Prabal Gurung", "Atlein", "atm Anthony  thomas melillo", "Attersee",
+                    "attico", "ATXV", "au jour le jour", "Audra",
+                    "Autumn Adeigbo", "avavav", "Avenir", "Awake",
+                    "AZ Factory", "Azzaro", "Bora Aksu", "babyghost",
+                    "Bach Mai", "back", "Badgley Mischka", "BAJA EAST",
+                    "baldwin", "Balenciaga", "Bally", "Balmain",
+                    "Banana Republic", "Band of Outsiders", "bande noir", "Barbara Bui",
+                    "Barbara Casasola", "Barbara Tfank", "Baro Lucas", "barragan",
+                    "bassike", "Basso & Brooke", "Batsheva", "BCBG Max Azria",
+                    "Beatrice .b", "beaufille", "Beautiful People", "Bebe",
+                    "Behnaz Sarafpour", "Bella Freud", "Belstaff", "Bensoni",
+                    "Bernhard Willhelm", "Bethany Williams", "Betsey Johnson", "Betty Jackson",
+                    "Bevza", "Bianca Saunders", "Bibhu Mohapatra", "Bill Blass",
+                    "Billy Reid", "Bite Studios", "Blanc De Chine", "bldwn",
+                    "BLK DNM", "Blumarine", "Bode", "Boramy Viguier",
+                    "Bosideng", "Bottega Veneta", "Botter", "Bouchra Jarrar",
+                    "Boy and Girl by Band of Outsiders", "Brandon Maxwell", "Brandon Sun", "Brian Reyes",
+                    "Brioni", "BROCK COLLECTION", "Bronx and Banco", "Brood",
+                    "Brooks Brothers", "Brunello Cucinelli", "Bruno Pieters", "Burberry Prorsum",
+                    "Burc Akyol", "By Malene Birger", "BY. Bonnie Young", "Byblos",
+                    "Cacharel", "Calla", "Câllas-Milano", "Calvin Klein",
+                    "Calvin Klein Collection", "Calvin Luo", "CAMILLA AND MARC", "Campillo",
+                    "Capasa Milano", "Carlos Miele", "Carmen March", "Carolina Herrera",
+                    "Caroline Hu", "Carven", "Casablanca", "Casely Hayford",
+                    "Catherine Malandrino", "CDLM", "Cecilie Bahnsen", "Cedric Charlier",
+                    "Celestino Couture", "Céline", "Central Saint Martins", "CFCL",
+                    "CG", "Chado Ralph Rucci", "Chadwick Bell", "Chalayan",
+                    "Chanel", "Charles Anastase", "Charles Jeffrey Loverboy", "Charlie Constantinou",
+                    "Charlotte Knowles", "Charlotte Olympia", "Charlotte Ronson", "Chet Lo",
+                    "Chiara Ferragni", "Chloë Sevigny for O.C.", "Chloé", "Chloe Sevigny for Opening Ceremony",
+                    "Chocheng", "Chopova Lowena", "Chris Benz", "Christian Cota",
+                    "Christian Cowan", "Christian Dior", "Christian Lacroix", "Christian Siriano",
+                    "Christian Wijnants", "Christophe Lemaire", "Christopher Esber", "Christopher John Rogers",
+                    "Christopher Kane", "Christopher Raeburn", "Chromat", "Chufy",
+                    "cienne", "Cinq à Sept", "CIVIDINI", "Claro Couture",
+                    "Claudia Li", "Clements Ribeiro", "Clover Canyon", "Co",
+                    "Coach", "Colleen Allen", "Collette Dinnigan", "Collina Strada",
+                    "Colovos", "Colville", "Comme des Garçons", "Comme des Garcons Comme des Garcons",
+                    "Commission", "Commuun", "Comptoir des Cotonniers", "Cong Tri",
+                    "Conner Ives", "Connor McKnight", "Coperni", "COPERNI FEMME",
+                    "Cormio", "Costello Tagliapietra", "Costume National", "County of Milan",
+                    "Courreges", "Craig Green", "Creatures of Comfort", "Creatures of the Wind",
+                    "Cult Gaia", "Cushnie", "Cushnie Et Ochs", "Custo Barcelona",
+                    "Cut25 by Yigal Azrouël", "Cynthia Rowley", "Cynthia Steffe", "D&G",
+                    "Daks", "Damir Doma", "Daniel W. Fletcher", "Danielle Frankel",
+                    "Danielle Scutt", "Daryl K", "David Koma", "David Michael",
+                    "Davidelfin", "Dean Quinn", "Del Core", "Delpozo",
+                    "Dennis Basso", "Derek Lam", "Deveaux", "Devi Kroell",
+                    "Di Petsa", "Diane von Furstenberg", "Dice Kayek", "Diesel",
+                    "Diesel Black Gold", "Dilara Findikoglu", "Dion Lee", "Dior",
+                    "Diotima", "Discount Universe", "DKNY", "Dolce & Gabbana",
+                    "Dondup", "Donna Karan", "Doo.Ri", "Dorothee Schumacher",
+                    "Douglas Hannant", "Dries Van Noten", "Dsquared2", "Duckie Brown",
+                    "Duncan", "dundas", "Duran Lantink", "Durazzi",
+                    "Duro Olowu", "Dusan", "Each x Other", "Eckhaus Latta",
+                    "Edeline Lee", "Edun", "Edward Crutchley", "Edward Cuming",
+                    "EENK", "eftychia", "Elder Statesman", "Elena Velez",
+                    "Eley Kishimoto", "Elie Saab", "Elie Tahari", "Elisabetta Franchi",
+                    "Elise Øverland", "Elizabeth and James", "Elizabeth Kennedy", "Ellery",
+                    "Emanuel Ungaro", "Emilia Wickstead", "Emilio de la Morena", "Emilio Pucci",
+                    "Emporio Armani", "Enfants Riches Deprimes", "Erdem", "eric schlosberg",
+                    "Erika Cavallini", "Erin Fetherston", "Erin Wasson × RVCA", "ERL",
+                    "Ermanno Scervino", "Escada", "Esteban Cortazar", "Ester Manas",
+                    "Et Ochs", "Etoile isabel marant", "Etro", "Eudon Choi",
+                    "European Culture", "Eytys", "Fabiana Filippi", "faith connexion",
+                    "Farah Angsana", "Fashion East", "Fashion Fringe", "Fashion Institute of Technology",
+                    "Faustine Steinmetz", "Fausto Puglisi", "Fay", "Fe Noel",
+                    "fear of god", "Feben", "Felder Felder", "Felipe Oliveira Baptista",
+                    "Fendi", "Feng Chen Wang", "FENTY PUMA", "ferrari",
+                    "Fforme", "Fila", "Filippa K", "Filles A Papa",
+                    "For Eestless Sleepers", "Frame", "frame denim", "Francesco Biasia",
+                    "Francesco Murano", "Francesco Scognamiglio", "Francoise", "Frederick Anderson",
+                    "G-Star", "Gabriela Hearst", "Gabriele Colangelo", "Gabrielle Colangelo",
+                    "Galvan", "Ganni", "Gant by Michael Bastian", "Gareth Pugh",
+                    "Gary Graham", "gauchere", "Gauntlett Cheng", "GCDS",
+                    "Generra", "Genny", "Giada", "Giamba",
+                    "Giambattista Valli", "Gianfranco Ferrè", "Giles", "Giles Deacon",
+                    "Giorgio Armani", "Giovanna Flores", "Giulietta", "Giuseppe Di Morabito",
+                    "Givenchy", "gmbh", "Grace Ling", "Graeme Armour",
+                    "Graeme Black", "Greedilous by Tilda", "Greg Lauren", "Gregory Parkinson",
+                    "Greta Constantine", "Grey Jason Wu", "Ground Zero", "Gryphon",
+                    "Gucci", "Guo Pei", "Guy Laroche", "GYPSY SPORT",
+                    "H&M", "Haider Ackermann", "Hakaan", "Hakan Yildirim",
+                    "Halpern", "Halston", "Haney", "Hannah Marshall",
+                    "Hardware LDN", "Harris Reed", "haus alkire", "Head of State",
+                    "Heirlome", "Heliot Emil", "Hellessy", "Helmstedt",
+                    "Helmut Lang", "Heohwan Simulation", "Hermès", "Heron Preston",
+                    "Herve Leger", "Hillier Bartley", "Hodakova", "Holland and Holland",
+                    "Holly Fulton", "Holmes & Yang", "Holzweiler", "Honor",
+                    "Hood By Air", "Hope For Flowers", "House of Aama", "House of Dagmar",
+                    "House of Holland", "Hugo", "Hugo Boss", "HUI",
+                    "Huishan Zhang", "Hunter Original", "Hussein Chalayan", "Hyden Yoo",
+                    "Icb", "Iceberg", "Imitation of Christ", "In Earnest",
+                    "Institut Français de la Mode", "Institution By Galib Gassanoff", "interior", "Iris van Herpen",
+                    "iro", "ISA ARFEN", "Isaac Mizrahi", "Isabel Marant",
+                    "Isola Marras", "Issa", "Issey Miyake", "J Brand",
+                    "J. JS.LEE", "J.Crew", "J.Mendel", "J.W.Anderson",
+                    "J6", "Jacquemus", "Jaeger London", "James Long",
+                    "Jane Wade", "Jasmine Di Milo", "Jason Wu", "Jasper Conran",
+                    "Jawara Alleyne", "Jay Ahr", "Jean Charles de Castelbajac", "Jean Colonna",
+                    "Jean Paul Gaultier", "Jean-Paul Lespagnard", "Jean-Pierre Braganza", "Jeffrey Dodd",
+                    "Jen Kao", "Jenni Kayne", "Jenny Packham", "Jeremy Laing",
+                    "Jeremy Scott", "JI OH", "Jil Sander", "Jil Sander Navy",
+                    "Jill Stuart", "Jitrois", "Johanna Ortiz", "Johanna Parv",
+                    "John Elliot Co", "John Galliano", "John Richmond", "John Rocha",
+                    "Joie", "Jonathan Cohen", "Jonathan Saunders", "Jonathan Simkhai",
+                    "Jordan Dalah", "Joseph", "Josephus Thimister", "Josh Goot",
+                    "Josie Natori", "Jourden", "Juan Carlos Obando", "Judy Turner",
+                    "Juicy Couture", "Julian Louie", "Julie Kegels", "Julien David",
+                    "Julien Macdonald", "Junya Watanabe", "Just Cavalli", "Juun.J",
+                    "JW Anderson", "k krizia", "Kaelen", "Kallmeyer",
+                    "Kanye West", "kanye west adidas originals", "Karen Walker", "Karl Lagerfeld",
+                    "Karolina Zmarlak", "Karoline Vitto", "Kate Barton", "Kate Spade",
+                    "Katie Eary", "Katie Ermilio", "Katie Gallagher", "Kaufman Franco",
+                    "Kelly Wearstler", "Kendall + Kylie", "Kenneth Cole", "Kenneth Ize",
+                    "Kenneth Nicholson", "Kent & Curwen", "Kenzo", "kenzo-la-memento",
+                    "Kes", "Kevork Kiledjian", "khaite", "kiko kostadinov",
+                    "Kim Shui", "Kimberly Ovitz", "Kinder Aggugini", "kith",
+                    "kiton", "kitx", "kls kimora lee simmons", "Koche",
+                    "Koi Suwannagate", "Kolor", "Kozaburo", "Kris Van Assche",
+                    "Krizia", "KTZ", "Kwaidan Editions", "L.A.M.B.",
+                    "La Doublej", "La Perla", "La Vie Rebecca Taylor", "Labrum London",
+                    "Lacoste", "Lafayette 148", "lagence", "Lala Berlin",
+                    "Lanvin", "Laquan Smith", "Laura Garcia", "Lauren Manoogian",
+                    "Le Kilt", "Lee Mathews", "Lein", "Lela Rose",
+                    "Lemaire", "Leonard", "Les Copains", "Libertine",
+                    "Liberty", "Lii", "Limi Feu", "Linder",
+                    "Lindsey Thornburg", "Lisa Marie Fernandez", "Lisa Perry", "Live The Process",
+                    "Loewe", "London College of Fashion", "Longchamp", "Lorena Antoniazzi",
+                    "LORO PIANA", "Lou Dallas", "Louis Vuitton", "Louise Goldin",
+                    "Louise Gray", "LoveShackFancy", "LP.BG", "lrs",
+                    "luar", "Luca Luca", "Lucas Nascimento", "Lucio Vanotti",
+                    "Ludovic de Saint Sernin", "Luella", "Luis De Javier", "Luisa Beccaria",
+                    "Luisa Spagnoli", "LuLu & Co", "LULU LIU", "Lutz & Patmos",
+                    "LUTZ HUELLE", "LWren Scott", "Lyn Devon", "M Missoni",
+                    "M. Martin", "M. Patmos", "Maccapani", "Mach&Mach",
+                    "Magda Butrym", "Maggie Marilyn", "Mains", "Maisie Wilen",
+                    "Maison Common", "Maison Kitsuné", "Maison Martin Margiela", "Maison Rabih Kayrouz",
+                    "Maiyet", "Maje", "Maki Oh", "Malandrino",
+                    "Mame Kurogouchi", "Mandy Coon", "Manish Arora", "MANSUR GAVRIEL",
+                    "Mara Hoffman", "Marc by Marc Jacobs", "Marc Jacobs", "Marchesa",
+                    "marchesa notte", "marchesa Voyage", "Marco de Vincenzo", "Marco Rambaldi",
+                    "Margaret Howell", "Maria Grachvogel", "Maria Mcmanus", "Marie Adam-Leenaerdt",
+                    "Marina Moscone", "Marine Serre", "Marios Schwab", "Marissa Webb",
+                    "Mark Fast", "MARK MCNAIRY", "Markarian", "Markus Lupfer",
+                    "Marni", "Marques’ Almeida", "Marta Jakubowski", "Martin Grant",
+                    "Mary Katrantzou", "maryam nassir zadeh", "maryling", "Masha Ma",
+                    "Masha Popova", "Maticevski", "Matières Fécales", "matthew adams dolan",
+                    "Matthew Ames", "Matthew Williamson", "Matty Bovan", "Maurizio Pecoraro",
+                    "Max Azria", "Max Mara", "Max Mara Atelier", "Maxhosa",
+                    "Maxime Simoens", "McQ", "Meadham Kirchhoff", "Melbostad",
+                    "Melitta Baumeister", "Meruert Tolegen", "Meryll Rogge", "Mfpen",
+                    "Miaou", "Michael Angel", "Michael Bastian", "Michael Kors",
+                    "Michael Van Der Ham", "Milly", "Mimi Prober", "Mira Mikati",
+                    "Misha Nonoo", "Missoni", "Mithridate", "Miu Miu",
+                    "MM6", "Modernist", "Molly Goddard", "Moncler",
+                    "Moncler + DingYun Zhang", "Moncler 0 Richard Quinn", "Moncler 1 JW Anderson", "Moncler 1 Pierpaolo Piccioli",
+                    "Moncler 2 1952", "Moncler 4 Simone Rocha", "Moncler 6 1017 Alyx 9SM", "Moncler 6 Noir Kei Ninomiya",
+                    "Moncler 7 Fragment Hiroshi Fujiwara", "Moncler 8 Palm Angels", "Moncler 8 Richard Quinn", "Moncler Gamme Rouge",
+                    "Moncler Genius", "Moncler Grenoble", "Monique Lhuillier", "monse",
+                    "Moon Choi", "Moschino", "Moschino Cheap & Chic", "Mossi",
+                    "Mother", "Mother of Pearl", "Mowalola", "MSGM",
+                    "Mugler", "Mulberry", "myar", "N.Hoolywood",
+                    "Nabil Nayal", "Naeem Khan", "NAHM", "Nanette Lepore",
+                    "Nanushka", "Narciso Rodriguez", "Nardos", "Nasir Mazhar",
+                    "Natan", "Natasha Zinko", "Natasha Zinko x DUO", "Nathan Jenden",
+                    "Nehera", "Neil Barrett", "Nellie Partow", "nells nelson",
+                    "Nensi Dojaka", "Niccolo Pasqualetti", "Nicholas K", "Nicolas Andreas Taralis",
+                    "Nicole Farhi", "Nicole Miller", "nicopanda", "NIHL",
+                    "Nili Lotan", "Nina Ricci", "No Sesso", "NO.21",
+                    "Noir Kei Ninomiya", "nomia", "Nonoo", "Norma Kamali",
+                    "Novis", "Oak", "off-white", "Officine Generale",
+                    "Ohne Titel", "Olivier Theyskens", "Olympia Le-Tan", "Onitsuka Tiger",
+                    "Opening Ceremony", "Organic by John Patrick", "Orla Kiely", "Oscar de la Renta",
+                    "Oscar Ouyang", "Osklen", "Osman", "Ostwald Helgason",
+                    "Ottolinger", "Our Legacy", "Paco Rabanne", "palm angels",
+                    "Palmer Harding", "Palomo Spain", "Pam & Gela", "Pam Hogg",
+                    "Pamella Roland", "Paolina Russo", "Paolo Carzana", "Paria Farzaneh",
+                    "Paris 68", "Parson's MFA", "Patou", "Patrick McDowell",
+                    "Patrik Ervell", "Paul & Joe", "Paul Smith", "Paul Smith Women",
+                    "Paula Canovas Del Vas", "Paule Ka", "Pauline Dujancourt", "Pedro del Hierro",
+                    "Pedro Lourenço", "Petar Petrov", "Peter Do", "Peter Jensen",
+                    "Peter Pilotto", "Peter Som", "Petra Fagerström", "ph5",
+                    "phelan", "Phi", "Philip Treacy", "Philipp Plein",
+                    "Philosophy", "Philosophy Di Lorenzo Serafini", "Phoebe English", "Piazza Sempione",
+                    "Piece d'Anarchive", "Pierre Balmain", "Pilotto", "Plan-C",
+                    "poiret", "Pollini", "Polo Ralph Lauren", "Ponte",
+                    "Porsche Design", "Ports 1961", "PPQ", "Prabal Gurung",
+                    "Prada", "Preen", "Preen by Thornton Bregazzi", "Pringle of Scotland",
+                    "Priscavera", "Private Policy", "Proenza Schouler", "Pronounce",
+                    "Protagonist", "Prune Goldschmidt", "PT Torino", "Public School",
+                    "Puppets and Puppets", "pyer moss", "Quira", "r13",
+                    "Rabanne", "Rachel Antonoff", "Rachel Comey", "Rachel Roy",
+                    "Rachel Zoe", "RAD by Rad Hourani", "Rad Hourani", "Raf Simons",
+                    "Rag & Bone", "Rahul Mishra", "Rahul Mishra AFEW", "Raleigh",
+                    "Ralph & Russo", "Ralph Lauren", "Ralph Rucci", "Raquel Allegra",
+                    "Raquel Diniz", "Rave Review", "Rebecca De Ravenel", "Rebecca Minkoff",
+                    "Rebecca Taylor", "Red Valentino", "Redemption", "Redone",
+                    "Reed Krakoff", "Reem Acra", "Reese Cooper", "Rejina Pyo",
+                    "Renaissance Renaissance", "rentrayage", "Requiem", "rev",
+                    "rhie", "Rhude", "Richard Chai Love", "Richard Malone",
+                    "Richard Nicoll", "Richard Quinn", "Rick Owens", "Robert Rodriguez",
+                    "Roberta Einer", "Roberto Cavalli", "Rochambeau", "Rochas",
+                    "Rodarte", "Rodebjer", "Roisin Pierce", "Rokh",
+                    "Roksanda", "Roksanda Ilincic", "Roland Mouret", "Romance Was Born",
+                    "Romeo Hunte", "ronald-van-der-kemp", "Rory William Docherty", "rosetta getty",
+                    "Rosie Assoulin", "Rossella Jardini", "RR331", "RTA",
+                    "Rue Agthonis", "Rue du Mail", "Ruffian", "RVNG Couture",
+                    "Ryan Lo", "ryan roche", "S.S. Daley", "Sacai",
+                    "Sachin + Babi", "Saint Laurent", "Saint Sintra", "Saks-Potts",
+                    "Sally LaPointe", "Salon 1884", "saloni", "Salvatore Ferragamo",
+                    "samuji", "Sanderlak", "Sandra Mansour", "Sandro",
+                    "Sandy Liang", "Santoni Edited By Marco Zanin", "sara battaglia", "SARAWONG",
+                    "Sass & Bide", "SC103", "Schiaparelli", "Scotch&Soda",
+                    "Sea", "Sebastien Ami", "See by Chloe", "Self-Portrait",
+                    "Sergio Hudson", "Serkan Cura", "Shaina Mote", "SHANG XIA",
+                    "Sharon Wauchob", "Shiatzy Chen", "Shipley & Halmos", "Shrimps",
+                    "Shuting Qiu", "Sibling", "Sid Neigum", "sies marjan",
+                    "Siki Im", "Simon Miller", "Simon Spurr", "Simone Rocha",
+                    "simonetta ravizza", "Simorra", "Sinead ODwyer", "Sister by Sibling",
+                    "Sixdo by Do Manh Cuong", "Skaist Taylor", "Snow Xue Gao", "solace london",
+                    "Sonia Rykiel", "Sophia kah", "Sophia Kokosalaki", "Sophie Théallet",
+                    "Sportmax", "Sports Banger", "Sss world corp", "st roche",
+                    "St. John", "Stand Studio", "Standing Ground", "Staud",
+                    "Stefan Cooke", "Stein", "Stella Jean", "Stella McCartney",
+                    "Stéphane Rolland", "Stephen Burrows", "Steve O Smith", "Steven Alan",
+                    "Studio 189", "Stærk", "Sukeina", "sunnei",
+                    "Suno", "Supriya Lele", "Susan Fang", "Suzanne Rae",
+                    "Sykes", "Symonds Pearmain", "SYSTEM", "T by Alexander Wang",
+                    "Tadashi Shoji", "Tagliatore", "Takahiromiyashita The Soloist", "Talbot Runhof",
+                    "Talia Byre", "Tamara Mellon", "Tanner Fletcher", "Tanya Taylor",
+                    "TAO Comme des Garçons", "TELFAR", "Temperley London", "Ter et Bantine",
+                    "Tess Giberson", "Tessa", "Teurn Studios", "Thakoon",
+                    "Thakoon Addition", "The Academy New York", "THE ELDER STATESMAN", "The Frankie Shop",
+                    "The Gigi", "The Great", "The Label Edition", "The Lake & Stars",
+                    "The Row", "Thebe Magugu", "Theophilio", "Theory",
+                    "Thevxlley", "Theyskens' Theory", "Thierry Mugler", "Thimister",
+                    "Thom Browne", "Thomas Tait", "Threeasfour", "Tia Adeola",
+                    "Tia Cibani", "Tibi", "Tiger of Sweden", "tim coppens",
+                    "Tim Hamilton", "Tim Hamilton Redux", "Timo Weiland", "Tíscar Espadas",
+                    "Tocca", "Todd Lynn", "Tod’s", "TOGA",
+                    "Tokyo James", "Tolu Coker", "Tom Ford", "Tomas Maier",
+                    "Tome", "Tommy Hilfiger", "Tomo Koizumi", "Toni Maticevski",
+                    "Toogood", "Topshop Unique", "Torishéju", "Tory Burch",
+                    "Toteme", "Tove", "Tracy Reese", "Trademark",
+                    "TRE by Natalie Ratabesi", "Trias", "Tribune Standard", "Trina Turk",
+                    "Trussardi", "TSE", "Tsumori Chisato", "Tuleh",
+                    "Twenty8Twelve", "TWP", "ulla johnson", "Ulyana Sergeenko",
+                    "Uma Wang", "Umit Benan", "Undercover", "Unique",
+                    "Uniqueness", "United Bamboo", "Unravel", "Valentin Yudashkin",
+                    "Valentino", "Vanessa Bruno", "Vanessa Seward", "vaquera",
+                    "Vejas", "Vena Cava", "Vera Wang", "Veronica Beard",
+                    "Véronique Branquinho", "Véronique Leroy", "Versace", "Versus",
+                    "vetements", "VFiles", "Victor Alfaro", "Victor De Souza",
+                    "Victor Glemaud", "Victoria Beckham", "Victoria Victoria Beckham", "Victoriatomas",
+                    "Vika Gazinskaya", "Viktor & Rolf", "vilshenko", "vince",
+                    "Vionnet", "Visvim", "vivetta", "Vivienne Tam",
+                    "Vivienne Westwood", "Vivienne Westwood Red Label", "VPL", "vtmnts",
+                    "Wales Bonner", "Wanda Nylon", "warm", "Wayne",
+                    "we11done", "Wendy Nichol", "Wes Gordon", "Whistles",
+                    "Whit", "Who Decides War", "Wiederhoeft", "William Rast",
+                    "Willie Norris for Outlier", "Willow", "Willy Chavarria", "Windsor",
+                    "Winnie", "Wolk Morais", "Wooyoungmi", "Wunderkind",
+                    "Xu Zhi", "Xuly.Bët", "Y's By Yohji Yamamoto", "Y-3",
+                    "Y/Project", "Yajun", "Yaku", "Yang Li",
+                    "yeezy", "Yeohlee", "Yigal Azrouel", "Yiqing Yin",
+                    "Yohji Yamamoto", "Yuhan Wang", "Yves Saint Laurent", "Z Spoke by Zac Posen",
+                    "Zac Posen", "ZAC Zac Posen", "Zadig & Voltaire", "zandra rhodes",
+                    "zanini", "Zankov", "Zero + Maria Cornejo", "Zimmermann",
+                    "Zoe Gustavia Anna Whalen", "Zoë Jordan", "Zomer", "Zuhair Murad",
+                    "10 Crosby Derek Lam", "1205", "16Arlington", "3.1 Phillip Lim",
+                    "5000", "6397", "7 For All Mankind"
+                ]
+            },
+            art: {
+                navName: '艺术 ART',
+                hero: 'ART 艺术',
+                subpages: [
+                    { name: '绘画', cards: ['绘画一', '绘画二', '绘画三', '绘画四', '绘画五'] },
+                    { name: '雕塑', cards: ['雕塑一', '雕塑二', '雕塑三', '雕塑四', '雕塑五'] },
+                    { name: '音乐', cards: ['音乐一', '音乐二', '音乐三', '音乐四', '音乐五'] },
+                    { name: '舞蹈', cards: ['舞蹈一', '舞蹈二', '舞蹈三', '舞蹈四', '舞蹈五'] },
+                    { name: '戏剧', cards: ['戏剧一', '戏剧二', '戏剧三', '戏剧四', '戏剧五'] },
+                    { name: '书法', cards: ['书法一', '书法二', '书法三', '书法四', '书法五'] },
+                    { name: '电影', cards: ['电影一', '电影二', '电影三', '电影四', '电影五'] },
+                    { name: '建筑', cards: ['建筑一', '建筑二', '建筑三', '建筑四', '建筑五'] },
+                    { name: '文学', cards: ['文学一', '文学二', '文学三', '文学四', '文学五'] },
+                    { name: '游戏', cards: ['游戏一', '游戏二', '游戏三', '游戏四', '游戏五'] }
+                ],
+                latestCards: ['卡片一', '卡片二', '卡片三', '卡片四', '卡片五'],
+                // 艺术大师名录（中英对照）
+                designers: [
+                    "Albrecht Dürer 阿尔布雷希特·丢勒", "Anselm Kiefer 安塞姆·基弗", "Artemisia Gentileschi 阿尔泰米西娅·真蒂莱斯基", "Banksy 班克斯",
+                    "Caravaggio 卡拉瓦乔", "Claude Monet 克劳德·莫奈", "Cimabue 契马布埃", "Constantin Brâncuși 康斯坦丁·布朗库西",
+                    "Cy Twombly 赛·托姆布雷", "Damien Hirst 达米恩·赫斯特", "Edgar Degas 埃德加·德加", "Edvard Munch 爱德华·蒙克",
+                    "Edward Hopper 爱德华·霍普", "El Greco 埃尔·格列柯", "Édouard Manet 爱德华·马奈", "Eugène Delacroix 欧仁·德拉克鲁瓦",
+                    "Francis Bacon 弗朗西斯·培根", "Francisco Goya 弗朗西斯科·戈雅", "Frank Auerbach 弗兰克·奥尔巴赫", "Fra Angelico 弗拉·安杰利科",
+                    "Frida Kahlo 弗里达·卡罗", "Georgia O’Keeffe 乔治亚·欧姬芙", "Giotto 乔托", "Giorgio de Chirico 乔治·德·基里科",
+                    "Gustav Klimt 古斯塔夫·克林姆特", "Gustave Courbet 古斯塔夫·库尔贝", "Hans Holbein 汉斯·荷尔拜因", "Henri Matisse 亨利·马蒂斯",
+                    "Hieronymus Bosch 耶罗尼米斯·博斯", "Hilma af Klint 希尔玛·阿夫·克林特", "Jackson Pollock 杰克逊·波洛克", "Jasper Johns 贾斯培·琼斯",
+                    "Jean-Baptiste Chardin 让-巴蒂斯特·夏尔丹", "Jean-Honoré Fragonard 让-奥诺雷·弗拉戈纳尔", "Jean-Michel Basquiat 让-米歇尔·巴斯奇亚", "Joan Miró 胡安·米罗",
+                    "Johannes Vermeer 约翰内斯·维米尔", "Kazimir Malevich 卡济米尔·马列维奇", "Keith Haring 凯斯·哈林", "Leonardo da Vinci 列奥纳多·达·芬奇",
+                    "Lucian Freud 卢西安·弗洛伊德", "Marc Chagall 马克·夏加尔", "Marcel Duchamp 马塞尔·杜尚", "Mark Rothko 马克·罗斯科",
+                    "Mary Cassatt 玛丽·卡萨特", "Michelangelo 米开朗基罗", "Milton Avery 米尔顿·艾弗里", "Nicolas Poussin 尼古拉·普桑",
+                    "Pablo Picasso 巴勃罗·毕加索", "Paul Cézanne 保罗·塞尚", "Paul Gauguin 保罗·高更", "Paul Klee 保罗·克利",
+                    "Petrus Christus 彼得鲁斯·克里斯蒂", "Piero della Francesca 皮耶罗·德拉·弗朗切斯卡", "Piet Mondrian 彼埃·蒙德里安", "Pierre-Auguste Renoir 皮埃尔-奥古斯特·雷诺阿",
+                    "Raphael 拉斐尔", "Rembrandt 伦勃朗", "René Magritte 勒内·马格利特", "Roy Lichtenstein 罗伊·利希滕斯坦",
+                    "Peter Paul Rubens 彼得·保罗·鲁本斯", "Salvador Dalí 萨尔瓦多·达利", "Sandro Botticelli 桑德罗·波提切利", "Sassetta 萨塞塔",
+                    "Titian 提香", "Toulouse-Lautrec 图卢兹-劳特雷克", "J. M. W. Turner 透纳", "Vincent van Gogh 文森特·梵高",
+                    "Wassily Kandinsky 瓦西里·康定斯基", "James Abbott McNeill Whistler 惠斯勒", "Willem de Kooning 威廉·德·库宁", "Yayoi Kusama 草间弥生",
+                    "Yves Klein 伊夫·克莱因"
+                ]
+            },
+            city: {
+                navName: '城史 CITY',
+                hero: 'CITY 城史',
+                subpages: [
+                    { name: '子页一', cards: ['卡片一', '卡片二', '卡片三', '卡片四', '卡片五'] },
+                    { name: '子页二', cards: ['卡片一', '卡片二', '卡片三', '卡片四', '卡片五'] }
+                ],
+                latestCards: ['Handan 邯郸', '卡片二', '卡片三', '卡片四', '卡片五'],
+                // 中国城市名录（A-Z）
+                designers: [
+                    "Anqing 安庆", "Anshan 鞍山", "Anshun 安顺", "Anyang 安阳",
+                    "Beijing 北京", "Baoding 保定", "Baotou 包头", "Beihai 北海",
+                    "Bengbu 蚌埠", "Changchun 长春", "Changde 常德", "Changsha 长沙",
+                    "Changzhou 常州", "Chengdu 成都", "Chongqing 重庆", "Dali 大理",
+                    "Dalian 大连", "Dandong 丹东", "Datong 大同", "Dongguan 东莞",
+                    "Dunhuang 敦煌", "Emeishan 峨眉山", "Foshan 佛山", "Fuzhou 福州",
+                    "Ganzhou 赣州", "Guangzhou 广州", "Guilin 桂林", "Guiyang 贵阳",
+                    "Haikou 海口", "Handan 邯郸", "Hangzhou 杭州", "Harbin 哈尔滨",
+                    "Hefei 合肥", "Hengyang 衡阳", "Hohhot 呼和浩特", "Jiaxing 嘉兴",
+                    "Jilin 吉林", "Jinan 济南", "Jingdezhen 景德镇", "Jinhua 金华",
+                    "Jiujiang 九江", "Kaifeng 开封", "Kunming 昆明", "Lanzhou 兰州",
+                    "Lhasa 拉萨", "Lijiang 丽江", "Linyi 临沂", "Luoyang 洛阳",
+                    "Mianyang 绵阳", "Mudanjiang 牡丹江", "Nanchang 南昌", "Nanjing 南京",
+                    "Nanning 南宁", "Nantong 南通", "Nanyang 南阳", "Ningbo 宁波",
+                    "Panzhihua 攀枝花", "Pingyao 平遥", "Putian 莆田", "Qingdao 青岛",
+                    "Qinhuangdao 秦皇岛", "Quanzhou 泉州", "Qufu 曲阜", "Rizhao 日照",
+                    "Sanya 三亚", "Shanghai 上海", "Shantou 汕头", "Shaoxing 绍兴",
+                    "Shenyang 沈阳", "Shenzhen 深圳", "Shijiazhuang 石家庄", "Suzhou 苏州",
+                    "Taizhou 台州", "Taiyuan 太原", "Tangshan 唐山", "Tianjin 天津",
+                    "Weifang 潍坊", "Weihai 威海", "Wenzhou 温州", "Wuhan 武汉",
+                    "Wuxi 无锡", "Wuyishan 武夷山", "Xiamen 厦门", "Xi'an 西安",
+                    "Xiangyang 襄阳", "Xining 西宁", "Xuzhou 徐州", "Yangzhou 扬州",
+                    "Yantai 烟台", "Yichang 宜昌", "Yinchuan 银川", "Yiwu 义乌",
+                    "Zhangjiajie 张家界", "Zhangzhou 漳州", "Zhengzhou 郑州", "Zhongshan 中山",
+                    "Zhuhai 珠海", "Zibo 淄博", "Zunyi 遵义"
+                ],
+                designerZh: true // 名录显示中文、按拼音排序分组
+            },
+            home: {
+                navName: '家居 HOME',
+                hero: 'HOME 家居',
+                subpages: [
+                    { name: '子页一', cards: ['卡片一', '卡片二', '卡片三', '卡片四', '卡片五'] },
+                    { name: '子页二', cards: ['卡片一', '卡片二', '卡片三', '卡片四', '卡片五'] }
+                ],
+                latestCards: ['卡片一', '卡片二', '卡片三', '卡片四', '卡片五'],
+                // 家装风格与大师名录（中英对照）
+                designers: [
+                    "Albert Hadley 艾伯特·哈德利", "Andrée Putman 安德烈·普特曼", "Art Deco 装饰艺术", "Axel Vervoordt 阿克塞尔·维伍德",
+                    "Baroque 巴洛克", "Bauhaus 包豪斯", "Billy Baldwin 比利·鲍德温", "Bohemian 波西米亚",
+                    "Coastal 海岸风", "Contemporary 当代风", "Country 乡村风", "David Hicks 大卫·希克斯",
+                    "Dorothy Draper 多萝西·德雷珀", "Elsie de Wolfe 埃尔西·德·沃尔夫", "French Château 法式城堡", "Gothic 哥特风",
+                    "Ilse Crawford 伊尔莎·克劳福德", "Industrial 工业风", "Japandi 日式侘寂", "Jean-Michel Frank 让-米歇尔·弗兰克",
+                    "Jean Royère 让·罗耶尔", "Kelly Hoppen 凯莉·霍本", "Kelly Wearstler 凯莉·韦尔斯勒", "Madeline Stuart 玛德琳·斯图尔特",
+                    "Maximalism 极繁主义", "Mediterranean 地中海", "Mid-Century Modern 中古现代", "Minimalism 极简主义",
+                    "Modern Chinese 新中式", "Neoclassicism 新古典", "Parisian 巴黎风", "Peter Marino 彼得·马里诺",
+                    "Robert Couturier 罗伯特·库蒂里耶", "Rose Tarlow 罗丝·塔洛", "Rustic 粗犷田园", "Ryan Korban 瑞安·科尔班",
+                    "Scandinavian 北欧风", "Shabby Chic 复古破旧风", "Terence Conran 特伦斯·康兰", "Thomas O'Brien 托马斯·奥布莱恩",
+                    "Transitional 过渡风", "Vicente Wolf 维森特·沃尔夫", "Vincent Van Duysen 文森特·范·杜森", "Wabi-Sabi 侘寂",
+                    "Zen 禅意"
+                ]
+            }
+        };
+
+        // ===== 已收录品牌的图片素材库：LATEST IN 卡片或名录点击进入 =====
+        // folder 为相对本文件的素材文件夹；images 为 [文件名, 图注]
+        const BRAND_ASSETS = {
+            'Ann Demeulemeester': {
+                type: 'brand',
+                folder: 'ann-卡牌素材',
+                cover: 'ANN-DEMEULEMEESTER-卡牌.png',
+                cardImage: 'ann-portrait.png', // LATEST IN 小卡展示图（缺省用封面）
+                site: 'https://anndemeulemeester.com/en-cn',
+                images: [
+                    ['ann-portrait.png', 'ANN DEMEULEMEESTER · 设计师肖像'],
+                    ['patti-solo.jpg', 'PATTI SMITH 肖像 · 1970S'],
+                    ['horses-clean.jpg', '《HORSES》1975 · ROBERT MAPPLETHORPE 摄'],
+                    ['woolgathering.jpg', '"WOOLGATHERING" 1999春夏 秀场'],
+                    ['runway-fw25.jpg', 'FW25 秀场 · 宽檐帽'],
+                    ['runway-ss22.jpg', 'SS22 秀场'],
+                    ['ghostranch-c.jpg', 'GHOST RANCH · 新墨西哥（褪色处理）'],
+                    ['villamanin-c.jpg', 'VILLA MANIN · 意大利庄园'],
+                    ['patti-portrait.jpg', 'PATTI SMITH 档案影像 · 1970S']
+                ]
+            },
+            'Iris van Herpen': {
+                type: 'brand',
+                folder: 'ivh-卡牌素材',
+                cover: 'IRIS-VAN-HERPEN-卡牌.png',
+                cardImage: 'iris-portrait.jpg', // LATEST IN 小卡展示图（缺省用封面）
+                site: 'https://www.irisvanherpen.com/',
+                images: [
+                    ['iris-portrait.jpg', 'IRIS VAN HERPEN · 设计师肖像'],
+                    ['designer-portrait.jpg', '高定秀场 · 雕塑级轮廓'],
+                    ['runway-roots19.jpg', 'ROOTS OF REBIRTH SS21 · GIO STAIANO 摄'],
+                    ['runway-hypnosis10.jpg', 'HYPNOSIS AW19/20 走秀'],
+                    ['voltage-show.jpg', 'VOLTAGE · 3D打印骨骼'],
+                    ['bjork-voltage.jpg', '《VOLTAGE》时期档案影像'],
+                    ['hypnosis-omniverse.jpg', 'OMNIVERSE · ANTHONY HOWE 风动雕塑'],
+                    ['carteblanche-atmo1.jpg', 'CARTE BLANCHE SS23 水下档案'],
+                    ['carteblanche-atmo2.jpg', 'CARTE BLANCHE SS23 水下档案'],
+                    ['sensoryseas-underwater.jpg', 'SENSORY SEAS SS20 · 水下影像']
+                ]
+            },
+            'Dries Van Noten': {
+                type: 'brand',
+                folder: 'dvn-卡牌素材',
+                cover: 'DRIES-VAN-NOTEN-卡牌.png',
+                cardImage: 'dries-portrait-a.jpg', // LATEST IN 小卡展示图（缺省用封面）
+                site: 'https://www.driesvannoten.com/',
+                images: [
+                    ['dries-portrait-a.jpg', 'DRIES VAN NOTEN · 设计师肖像'],
+                    ['dries-portrait-b.jpg', '1999 男装"雨伞"大秀 · 装置档案'],
+                    ['runway-floral.jpg', '印花秀场 · 弗拉芒×波斯×东方'],
+                    ['garden-picking.jpg', 'RINGENHOF 剪花 · AW19 印花纪录'],
+                    ['garden-vogue-c.jpg', 'RINGENHOF 花园 · VOGUE 特辑']
+                ]
+            },
+            'Handan 邯郸': {
+                type: 'city',
+                folder: 'hd-卡牌素材',
+                cover: 'HANDAN-卡牌.png',
+                cardImage: 'congtai-d.jpg', // LATEST IN 小卡展示图（缺省用封面）
+                displayName: '邯郸',
+                images: [
+                    ['congtai.jpg', '武灵丛台 · 赵武灵王阅兵处'],
+                    ['bronze-horse-a.jpg', '战国青铜马 · 展柜实拍'],
+                    ['bronze-horse-b.jpg', '战国青铜马 · 赵王陵出土 · 禁止出境文物'],
+                    ['cizhou-pillow.jpg', '磁州窑瓷枕 · 国家一级文物'],
+                    ['xiangtang-a.jpg', '北齐菩萨造像 · 响堂山石窟']
+                ]
+            },
+            'Rick Owens': {
+                type: 'brand',
+                folder: 'rick-owens-卡牌素材',
+                cover: 'RICK-OWENS-卡牌.png',
+                cardImage: 'rick-portrait.jpg', // LATEST IN 小卡展示图（缺省用封面）
+                site: 'https://www.rickowens.eu/',
+                images: [
+                    ['rick-portrait.jpg', 'RICK OWENS · 设计师肖像'],
+                    ['michele-lamy-jpeg.jpg', 'MICHÈLE LAMY · 妻子与缪斯'],
+                    ['runway-ss24-1.jpg', 'SS24 LIDO 大秀 · 巴黎东京宫'],
+                    ['runway-ss24-2.jpg', 'SS24 LIDO 大秀 · 巴黎东京宫'],
+                    ['runway-ss24-3.jpg', 'SS24 LIDO 大秀 · 巴黎东京宫'],
+                    ['runway-ss24-4.jpg', 'SS24 LIDO 大秀 · 巴黎东京宫'],
+                    ['runway-ss24-5.jpg', 'SS24 LIDO 大秀 · 巴黎东京宫'],
+                    ['runway-ss24-6.jpg', 'SS24 LIDO 大秀 · 巴黎东京宫'],
+                    ['runway-fw25.jpg', 'FW25 雾中秀场'],
+                    ['runway-ss26.jpg', 'SS26 秀场'],
+                    ['backstage-ss26.jpg', 'SS26 后台肖像'],
+                    ['moncler-campaign-1.jpg', 'MONCLER × RICK OWENS SS26 大片'],
+                    ['moncler-campaign-2.jpg', 'MONCLER × RICK OWENS SS26 大片'],
+                    ['brutalist-ladefense.jpg', '粗野主义建筑 · 巴黎拉德芳斯']
+                ]
+            }
+        };
+
+        // 卡片图片路径：已收录品牌 → 素材文件夹展示图（cardImage 优先，缺省用卡牌封面）；其余 → images/<栏目>/<子页名>/<卡片名>.png
+        function cardImagePath(category, subpage, cardName) {
+            const asset = BRAND_ASSETS[cardName];
+            if (asset) return `${asset.folder}/${asset.cardImage || asset.cover}`;
+            return `images/${category}/${subpage}/${cardName}.png`;
+        }
+
+        // ===== 我的名录：卡片一~五（按栏目隔离：品牌收品牌、城史收城史） =====
+        // 按栏目分库存：brand 与 city 各自独立收录
+        function myCardsKey(type) { return 'ideology-my-cards-' + type; }
+
+        function loadMyCards(type) {
+            try {
+                const v = JSON.parse(localStorage.getItem(myCardsKey(type)));
+                if (Array.isArray(v)) return v;
+            } catch (e) {}
+            return [null, null, null, null, null];
+        }
+
+        function saveMyCards(cards, type) {
+            try { localStorage.setItem(myCardsKey(type), JSON.stringify(cards)); } catch (e) {}
+        }
+
+        function renderMyCards(grid, type) {
+            grid.innerHTML = '';
+            const cards = loadMyCards(type);
+            for (let i = 0; i < 5; i++) {
+                grid.appendChild(createMyCard(i, cards[i], type));
+            }
+        }
+
+        function createMyCard(index, data, type) {
+            const card = document.createElement('div');
+            card.className = 'brand-card my-card';
+            if (data && BRAND_ASSETS[data.brand]) {
+                const asset = BRAND_ASSETS[data.brand];
+                const filled = document.createElement('div');
+                filled.className = 'my-card-filled';
+                filled.style.backgroundImage = `url("${asset.folder}/${data.image}")`;
+                filled.title = data.caption || '';
+                card.appendChild(filled);
+                const name = document.createElement('div');
+                name.className = 'card-name';
+                name.textContent = data.brand;
+                card.appendChild(name);
+                // 点击已收录卡 → 进入品牌官网
+                card.addEventListener('click', () => {
+                    if (asset.site) window.open(asset.site, '_blank');
+                });
+                // 悬停工具：更换 / 移除
+                const tools = document.createElement('div');
+                tools.className = 'my-card-tools';
+                const swap = document.createElement('button');
+                swap.textContent = '更换';
+                swap.addEventListener('click', (e) => { e.stopPropagation(); openPicker(index, type); });
+                const del = document.createElement('button');
+                del.textContent = '移除';
+                del.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const cards = loadMyCards(type);
+                    cards[index] = null;
+                    saveMyCards(cards, type);
+                    renderMyCards(document.getElementById('card-grid'), type);
+                });
+                tools.appendChild(swap);
+                tools.appendChild(del);
+                card.appendChild(tools);
+            } else {
+                const empty = document.createElement('div');
+                empty.className = 'my-card-empty';
+                empty.innerHTML = '<div class="plus">+</div><div class="hint">' + (type === 'city' ? '收录城市' : '收录品牌') + '</div>';
+                card.appendChild(empty);
+                card.addEventListener('click', () => openPicker(index, type));
+            }
+            return card;
+        }
+
+        // ===== 弹出选择器：按栏目类型选条目 → 选素材图 → 收录到卡片 =====
+        let pickerSlot = null;
+        let pickerBrand = null;
+        let pickerType = 'brand';
+
+        function openPicker(slot, type) {
+            pickerSlot = slot;
+            pickerType = type || 'brand';
+            pickerBrand = null;
+            ensurePicker();
+            renderPicker();
+            document.getElementById('card-picker').classList.add('open');
+        }
+
+        function closePicker() {
+            document.getElementById('card-picker').classList.remove('open');
+        }
+
+        function ensurePicker() {
+            if (document.getElementById('card-picker')) return;
+            const overlay = document.createElement('div');
+            overlay.id = 'card-picker';
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closePicker();
+            });
+            const panel = document.createElement('div');
+            panel.className = 'picker-panel';
+            overlay.appendChild(panel);
+            document.body.appendChild(overlay);
+        }
+
+        function renderPicker() {
+            const asset = pickerBrand ? BRAND_ASSETS[pickerBrand] : null;
+            const panel = document.querySelector('#card-picker .picker-panel');
+            panel.innerHTML = '';
+
+            const close = document.createElement('button');
+            close.className = 'picker-close';
+            close.textContent = '×';
+            close.addEventListener('click', closePicker);
+            panel.appendChild(close);
+
+            const title = document.createElement('div');
+            title.className = 'picker-title';
+            title.textContent = `${pickerType === 'city' ? '收录城市' : '收录品牌'} · 卡片${'一二三四五'[pickerSlot]}`;
+            panel.appendChild(title);
+
+            const brands = document.createElement('div');
+            brands.className = 'picker-brands';
+            // 只列出本栏目类型的条目：品牌收品牌、城史收城史
+            Object.keys(BRAND_ASSETS).filter(b => (BRAND_ASSETS[b].type || 'brand') === pickerType).forEach(b => {
+                const btn = document.createElement('button');
+                btn.textContent = b;
+                if (b === pickerBrand) btn.classList.add('active');
+                btn.addEventListener('click', () => { pickerBrand = b; renderPicker(); });
+                brands.appendChild(btn);
+            });
+            panel.appendChild(brands);
+
+            if (!asset) return;
+
+            const grid = document.createElement('div');
+            grid.className = 'picker-grid';
+            // LATEST IN 展示图 + 意识形态卡牌 + 全部素材图，同名去重
+            const items = [[asset.cardImage || asset.cover, 'LATEST IN 展示图'], [asset.cover, '意识形态卡牌']]
+                .concat(asset.images);
+            const seen = new Set();
+            items.filter(([f]) => !seen.has(f) && seen.add(f)).forEach(([file, cap]) => {
+                const fig = document.createElement('figure');
+                fig.className = 'picker-thumb';
+                const img = document.createElement('img');
+                img.src = `${asset.folder}/${file}`;
+                img.loading = 'lazy';
+                const fc = document.createElement('figcaption');
+                fc.textContent = cap;
+                fig.appendChild(img);
+                fig.appendChild(fc);
+                fig.addEventListener('click', () => {
+                    const cards = loadMyCards(pickerType);
+                    cards[pickerSlot] = { brand: pickerBrand, image: file, caption: cap };
+                    saveMyCards(cards, pickerType);
+                    closePicker();
+                    renderMyCards(document.getElementById('card-grid'), pickerType);
+                });
+                grid.appendChild(fig);
+            });
+            panel.appendChild(grid);
+        }
+
+        // 创建卡片（图片加载失败时显示灰色占位块）
+        function createCard(category, subpage, cardName) {
+            const card = document.createElement('div');
+            card.className = 'brand-card';
+
+            // 已收录品牌：整卡可点击进入品牌素材页
+            if (BRAND_ASSETS[cardName]) {
+                card.classList.add('brand-link');
+                card.addEventListener('click', () => showBrandAssets(cardName));
+            }
+
+            const img = document.createElement('img');
+            img.className = 'card-img';
+            img.src = cardImagePath(category, subpage, cardName);
+            img.alt = cardName;
+            img.onerror = function() {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'card-img';
+                img.replaceWith(placeholder);
+            };
+
+            const name = document.createElement('div');
+            name.className = 'card-name';
+            name.textContent = cardName;
+
+            card.appendChild(img);
+            card.appendChild(name);
+            return card;
+        }
+
+        // 渲染一个栏目：大标题 + 子导航 + 精选卡区(3张) + LATEST IN(5张/行 + 名录)
+        function renderCategory(category) {
+            const data = SITE_DATA[category];
+            const main = document.getElementById('site-main');
+            main.innerHTML = '';
+
+            // 栏目大标题
+            const hero = document.createElement('div');
+            hero.className = 'category-hero';
+            hero.innerHTML = `<h1>${data.hero}</h1>`;
+            main.appendChild(hero);
+
+            // 子导航
+            const subNav = document.createElement('nav');
+            subNav.className = 'sub-nav';
+            const ul = document.createElement('ul');
+            data.subpages.forEach((sp, i) => {
+                const li = document.createElement('li');
+                li.textContent = sp.name;
+                if (i === 0) li.classList.add('active');
+                li.addEventListener('click', () => {
+                    ul.querySelectorAll('li').forEach(x => x.classList.remove('active'));
+                    li.classList.add('active');
+                    renderCardGrid(category, sp);
+                });
+                ul.appendChild(li);
+            });
+            subNav.appendChild(ul);
+            main.appendChild(subNav);
+
+            // 精选卡片区（row3：一行3张）
+            const gridSection = document.createElement('div');
+            gridSection.className = 'card-section';
+            const grid = document.createElement('div');
+            grid.className = 'card-grid row5';
+            grid.id = 'card-grid';
+            gridSection.appendChild(grid);
+            main.appendChild(gridSection);
+
+            // LATEST IN 标题
+            const latestTitle = document.createElement('div');
+            latestTitle.className = 'latest-title';
+            latestTitle.textContent = `LATEST IN ${data.hero.split(' ')[0]}`;
+            main.appendChild(latestTitle);
+
+            // LATEST IN：左侧品牌名录 + 右侧5张/行卡片
+            const latestFlex = document.createElement('div');
+            latestFlex.className = 'latest-flex';
+
+            const latestSection = document.createElement('div');
+            latestSection.className = 'card-section';
+            latestSection.style.padding = '0';
+            const latestGrid = document.createElement('div');
+            latestGrid.className = 'card-grid row5';
+            data.latestCards.forEach(cardName => {
+                latestGrid.appendChild(createCard(category, 'latest', cardName));
+            });
+            latestSection.appendChild(latestGrid);
+            latestFlex.appendChild(latestSection);
+            main.appendChild(latestFlex);
+
+            // 品牌名录（仅品牌栏目）
+            if (data.designers && data.designers.length > 0) {
+                renderDesignerDirectory(latestFlex, category, data.designers, data.designerZh);
+            }
+
+            // 默认渲染第一个子页
+            renderCardGrid(category, data.subpages[0]);
+        }
+
+        // 渲染某子页的精选卡片（品牌、城史栏目第一行 = 我的名录，卡片一~五）
+        function renderCardGrid(category, subpage) {
+            const grid = document.getElementById('card-grid');
+            grid.innerHTML = '';
+            if (category === 'brand' || category === 'city') {
+                renderMyCards(grid, category);
+                return;
+            }
+            subpage.cards.forEach(cardName => {
+                grid.appendChild(createCard(category, subpage.name, cardName));
+            });
+        }
+
+        // 渲染品牌名录：左侧滚动列表（按字母分组）+ 右侧A-Z索引栏
+        function renderDesignerDirectory(container, category, designers, zhMode) {
+            const section = document.createElement('div');
+            section.className = 'designer-directory';
+
+            const panel = document.createElement('div');
+            panel.className = 'directory-panel';
+
+            // 左侧列表：按首字母分组排序
+            const list = document.createElement('div');
+            list.className = 'directory-list';
+            // zhMode：数据为「拼音 + 中文」，界面只显示中文，排序/分组按拼音
+            const entries = designers.map(name => {
+                const m = zhMode ? name.match(/^([A-Za-z'-s]+?)s+([一-鿿].*)$/) : null;
+                return m ? { key: m[1], text: m[2] } : { key: name, text: name };
+            });
+            const groups = {};
+            entries.forEach(e => {
+                const letter = (e.key[0].toUpperCase() >= 'A' && e.key[0].toUpperCase() <= 'Z')
+                    ? e.key[0].toUpperCase() : '#';
+                if (!groups[letter]) groups[letter] = [];
+                groups[letter].push(e);
+            });
+            const letters = Object.keys(groups).sort((a, b) => (a === '#' ? 1 : b === '#' ? -1 : a.localeCompare(b)));
+
+            letters.forEach(letter => {
+                const h = document.createElement('div');
+                h.className = 'directory-letter';
+                h.dataset.letter = letter;
+                h.innerHTML = `<span>${letter}</span>`;
+                list.appendChild(h);
+
+                const ul = document.createElement('ul');
+                const items = zhMode
+                    ? groups[letter].slice().sort((a, b) => a.key.localeCompare(b.key))
+                    : groups[letter]; // 品牌：保持VOGUE页面原生顺序，不重排
+                items.forEach(e => {
+                    const li = document.createElement('li');
+                    li.textContent = e.text;
+                    li.addEventListener('click', () => showDesigner(category, e.text));
+                    ul.appendChild(li);
+                });
+                list.appendChild(ul);
+            });
+
+            // 右侧字母索引
+            const rail = document.createElement('div');
+            rail.className = 'directory-rail';
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('').forEach(letter => {
+                const btn = document.createElement('button');
+                btn.textContent = letter;
+                btn.dataset.letter = letter;
+                if (!letters.includes(letter)) {
+                    btn.style.opacity = '0.25';
+                    btn.style.cursor = 'default';
+                } else {
+                    btn.addEventListener('click', () => {
+                        const target = list.querySelector(`[data-letter="${letter}"]`);
+                        if (target) {
+                            list.scrollTop = target.offsetTop - list.offsetTop - 10;
+                            highlightRail(letter);
+                        }
+                    });
+                }
+                rail.appendChild(btn);
+            });
+
+            // 滚动时高亮当前字母
+            list.addEventListener('scroll', () => {
+                let current = letters[0];
+                letters.forEach(letter => {
+                    const h = list.querySelector(`[data-letter="${letter}"]`);
+                    if (h && h.offsetTop - list.offsetTop <= list.scrollTop + 40) {
+                        current = letter;
+                    }
+                });
+                highlightRail(current);
+            });
+
+            panel.appendChild(list);
+            panel.appendChild(rail);
+            section.appendChild(panel);
+
+            // 名录插到卡片左侧（LATEST IN 容器的第一个子元素）
+            container.prepend(section);
+        }
+
+        // 高亮右侧索引中的字母
+        function highlightRail(letter) {
+            document.querySelectorAll('.directory-rail button').forEach(b => {
+                b.classList.toggle('active', b.dataset.letter === letter);
+            });
+        }
+
+        // 点选品牌：已收录品牌 → 打开素材页；其余 → 展示单品牌卡片区
+        function showDesigner(category, name) {
+            if (BRAND_ASSETS[name]) {
+                showBrandAssets(name);
+                return;
+            }
+            const old = document.querySelector('.designer-view');
+            if (old) old.remove();
+
+            const view = document.createElement('div');
+            view.className = 'designer-view';
+
+            const nameEl = document.createElement('div');
+            nameEl.className = 'designer-name';
+            nameEl.textContent = name;
+            view.appendChild(nameEl);
+
+            const grid = document.createElement('div');
+            grid.className = 'card-grid';
+            grid.appendChild(createCard(category, 'designers', name));
+            view.appendChild(grid);
+
+            const latestFlex = document.querySelector('.latest-flex');
+            if (latestFlex) {
+                latestFlex.after(view);
+            } else {
+                document.getElementById('site-main').appendChild(view);
+            }
+
+            view.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // 当前栏目（内页返回时回到这里）与 hash 路由抑制标记
+        let currentCategory = 'brand';
+        let suppressHashChange = false;
+
+        // 已收录品牌 → 跳转品牌内页（hash 路由：可刷新、可前进后退）
+        function showBrandAssets(name) {
+            if (!BRAND_ASSETS[name]) return;
+            location.hash = '#brand=' + encodeURIComponent(name);
+        }
+
+        // 品牌内页：品牌大标题 + 「视觉意识形态」围合框 + 素材图墙（点击大图预览）
+        function renderBrandPage(name) {
+            const asset = BRAND_ASSETS[name];
+            if (!asset) return;
+            const main = document.getElementById('site-main');
+            main.innerHTML = '';
+
+            const page = document.createElement('div');
+            page.className = 'brand-page';
+
+            const back = document.createElement('div');
+            back.className = 'bp-back';
+            back.textContent = '← BACK 返回';
+            back.addEventListener('click', () => {
+                suppressHashChange = true;
+                location.hash = '';
+                renderCategory(currentCategory);
+            });
+            page.appendChild(back);
+
+            const title = document.createElement('h1');
+            title.className = 'bp-title';
+            title.textContent = asset.displayName || name;
+            page.appendChild(title);
+
+            const label = document.createElement('div');
+            label.className = 'bp-label';
+            label.innerHTML = '<span>视觉意识形态</span>';
+            page.appendChild(label);
+
+            const grid = document.createElement('div');
+            grid.className = 'assets-grid';
+            // 意识形态卡牌排在素材墙第一位
+            const items = [[asset.cover, '意识形态卡牌 · CARD']].concat(asset.images);
+            items.forEach(([file, cap]) => {
+                const item = document.createElement('figure');
+                item.className = 'asset-item';
+                const img = document.createElement('img');
+                img.src = `${asset.folder}/${file}`;
+                img.alt = cap;
+                img.loading = 'lazy';
+                img.addEventListener('click', () => openLightbox(img.src));
+                const fc = document.createElement('figcaption');
+                fc.textContent = cap;
+                item.appendChild(img);
+                item.appendChild(fc);
+                grid.appendChild(item);
+            });
+            page.appendChild(grid);
+
+            main.appendChild(page);
+            main.scrollTop = 0;
+        }
+
+        // hash 路由：#brand=<品牌名> ↔ 栏目页
+        function routeFromHash() {
+            const m = location.hash.match(/^#brand=(.+)$/);
+            const name = m ? decodeURIComponent(m[1]) : null;
+            if (name && BRAND_ASSETS[name]) {
+                renderBrandPage(name);
+            } else {
+                renderCategory(currentCategory);
+            }
+        }
+        window.addEventListener('hashchange', () => {
+            if (suppressHashChange) { suppressHashChange = false; return; }
+            routeFromHash();
+        });
+
+        // 灯箱：大图预览，点击任意处关闭
+        function openLightbox(src) {
+            let lb = document.getElementById('lightbox');
+            if (!lb) {
+                lb = document.createElement('div');
+                lb.id = 'lightbox';
+                lb.addEventListener('click', () => lb.classList.remove('open'));
+                const big = document.createElement('img');
+                lb.appendChild(big);
+                document.body.appendChild(lb);
+            }
+            lb.querySelector('img').src = src;
+            lb.classList.add('open');
+        }
+
+        // 正文滚动区高度 = 窗口高度 - 顶栏实际高度（顶栏固定不参与滚动）
+        function layoutMainScrollArea() {
+            const header = document.querySelector('.site-header');
+            const main = document.getElementById('site-main');
+            if (!header || !main) return;
+            const h = header.offsetHeight;
+            main.style.top = h + 'px';
+            main.style.height = (window.innerHeight - h) + 'px';
+        }
+        window.addEventListener('resize', layoutMainScrollArea);
+
+        // 初始化：主导航切换 + 默认渲染（带 hash 时直接进入品牌内页）
+        document.addEventListener('DOMContentLoaded', function() {
+            layoutMainScrollArea();
+            document.querySelector('.main-nav ul').addEventListener('click', function(e) {
+                const clickedItem = e.target.closest('li');
+                if (!clickedItem) return;
+
+                document.querySelectorAll('.main-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                clickedItem.classList.add('active');
+
+                currentCategory = clickedItem.getAttribute('data-category');
+                if (location.hash) {
+                    suppressHashChange = true;
+                    location.hash = '';
+                }
+                renderCategory(currentCategory);
+            });
+
+            currentCategory = 'brand';
+            if (location.hash) {
+                routeFromHash();
+            } else {
+                renderCategory('brand');
+            }
+        });
+    </script>
+</body>
+</html>

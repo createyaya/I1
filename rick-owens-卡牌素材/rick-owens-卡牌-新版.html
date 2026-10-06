@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1024px; height: 1536px; overflow: hidden; }
+  body {
+    font-family: "Songti SC", "SimSun", Georgia, serif;
+    background: #ffffff;
+    color: #111;
+    position: relative;
+  }
+  .page { width: 1024px; height: 1536px; padding: 26px 30px 20px; display: flex; flex-direction: column; }
+  .rule { height: 3px; background: #111; }
+  .rule.thin { height: 1px; }
+  .header { padding: 12px 0 8px; border-bottom: 1px solid #111; margin-bottom: 12px; }
+  .header .brand {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 44px; letter-spacing: 14px; font-weight: bold;
+  }
+  .header .sub {
+    font-size: 10px; letter-spacing: 4px; color: #555; margin-top: 2px;
+    font-family: Georgia, serif;
+  }
+  .cols { display: flex; gap: 22px; flex: 1; min-height: 0; }
+  .left { width: 61%; }
+  .right { width: 39%; }
+  .narr { font-size: 12.5px; line-height: 1.9; }
+  .narr p { margin-bottom: 7px; }
+  .hero {
+    width: 100%; height: 300px; object-fit: cover; display: block;
+    margin: 10px 0 4px; filter: grayscale(20%) contrast(1.05);
+  }
+  .hero-cap { font-size: 9px; letter-spacing: 2px; color: #777; margin-bottom: 10px; }
+  .h2 { font-size: 15px; font-weight: bold; margin: 8px 0 4px; }
+  .quote { font-size: 13px; font-weight: bold; margin: 6px 0; }
+  .right .sec { margin-bottom: 12px; }
+  .sec-title {
+    display: flex; align-items: center; gap: 8px;
+    font-family: Georgia, serif; font-size: 13px; letter-spacing: 3px; font-weight: bold;
+    border-top: 1px solid #111; padding-top: 6px; margin-bottom: 6px;
+  }
+  .sec-title .no { font-size: 11px; }
+  .sec-title::after { content: ""; flex: 1; height: 1px; background: #111; }
+  .item { margin-bottom: 8px; }
+  .item b { font-size: 11.5px; }
+  .item span { font-size: 10px; color: #444; }
+  .item p { font-size: 10.5px; line-height: 1.55; color: #222; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 6px 0 10px; }
+  .grid2 img { width: 100%; height: 118px; object-fit: cover; display: block; filter: grayscale(15%); }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin: 6px 0 10px; }
+  .grid3 img { width: 100%; height: 92px; object-fit: cover; display: block; filter: grayscale(15%); }
+  .footer {
+    border-top: 3px solid #111; margin-top: 8px; padding-top: 10px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+  }
+  .footer .brand {
+    font-family: Georgia, serif; font-size: 34px; letter-spacing: 12px; font-weight: bold;
+  }
+  .footer .motto { font-size: 11px; color: #333; text-align: right; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="rule"></div>
+  <div class="header">
+    <div class="brand">RICK&nbsp;OWENS</div>
+    <div class="sub">BRUTALISM&nbsp;AS&nbsp;DEVOTION&nbsp;&nbsp;·&nbsp;&nbsp;意识形态卡牌&nbsp;&nbsp;·&nbsp;&nbsp;2026.09</div>
+  </div>
+
+  <div class="cols">
+    <!-- 左栏：叙事 -->
+    <div class="left">
+      <div class="narr">
+        <p>你站在巴黎东京宫的院子里。<br>混凝土台阶从脚下升起，像一座未完工的祭坛。<br>音乐从地面震动上来——不是旋律，是低频。</p>
+        <p>模特从台阶上走下来，下颌抬起，直视前方，<br>双臂贴在身后，每一步都像在丈量建筑。<br>没有人微笑。这是一场仪式。</p>
+      </div>
+      <div class="h2">这就是</div>
+      <div class="quote">Rick Owens 的世界。</div>
+      <img class="hero" src="michele-lamy-jpeg.jpg" alt="Michèle Lamy">
+      <div class="hero-cap">MICHÈLE&nbsp;LAMY&nbsp;&nbsp;·&nbsp;&nbsp;黑色手指的金牙祭司</div>
+      <div class="narr">
+        <p>他出生在加州小镇 Porterville，一个保守的天主教农业小镇。他后来形容那里是"理解勒·柯布西耶的量尺"——低矮、水平、一望无际。他在自我放逐的地下年代里学会自律：清晨起床、阅读、吊环训练。他要做的，不过是把暗处的人体变成建筑。</p>
+        <p>1990年，他在好莱坞遇见 Michèle Lamy——比他年长近二十岁的法国女人，手指涂黑，牙齿镶金。他去为她打工；从那天起，她成了他的妻子、缪斯、共同执政者。她说教会他的不是审美，是"对一个世界的忠诚"。</p>
+      </div>
+      <div class="quote">粗野不是冷酷，<br>是把温柔浇筑成可以居住的形状。</div>
+    </div>
+
+    <!-- 右栏：档案 -->
+    <div class="right">
+      <div class="sec">
+        <div class="sec-title"><span class="no">01</span> RUNWAY ARCHIVE</div>
+        <div class="item"><b>SS24 男装 "LIDO"</b> <span>2023.6 巴黎东京宫</span>
+          <p>模特沿石阶列队而下，烟花与烟雾在院子里炸开；向威尼斯 Lido 致敬。</p></div>
+        <div class="grid2">
+          <img src="runway-ss24-1.jpg" alt="">
+          <img src="runway-ss24-2.jpg" alt="">
+        </div>
+        <div class="item"><b>SS25 男装 "HOLLYWOOD"</b> <span>2024.6 东京宫</span>
+          <p>200位模特身着白色群体行进，献给他出发的地方。</p></div>
+        <div class="item"><b>SS26 女装</b> <span>2025.6 东京宫</span>
+          <p>模特涉水穿过院中喷泉，皮革与湿混凝土；9月移师特罗卡德罗广场，以埃菲尔铁塔为背景。</p></div>
+        <div class="grid2">
+          <img src="runway-ss26.jpg" alt="">
+          <img src="runway-ss24-3.jpg" alt="">
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-title"><span class="no">02</span> CAMPAIGN ARCHIVE</div>
+        <div class="item"><b>Moncler × Rick Owens SS26</b> <span>摄影 Juergen Teller</span>
+          <p>主题 "Promoting Unlimited Love"；Rick 与 Michèle Lamy 本人出镜亲吻，媒体称之为 "love and brutalism"。</p></div>
+        <div class="grid2">
+          <img src="moncler-campaign-1.jpg" alt="">
+          <img src="moncler-campaign-2.jpg" alt="">
+        </div>
+        <div class="item"><b>影像基因</b> <span>FW25 雾中秀场</span>
+          <p>低饱和、混凝土色调、逆光雾气；下颌上抬、直视、双臂后掠——人体作为建筑。</p></div>
+        <div class="grid2">
+          <img src="runway-fw25.jpg" alt="">
+          <img src="brutalist-ladefense.jpg" alt="">
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-title"><span class="no">03</span> CULTURAL ORIGIN</div>
+        <div class="item"><b>Michèle Lamy</b> <span>妻子 · 缪斯 · 共同执政者</span>
+          <p>1990年相识于好莱坞；黑色手指、金牙、祭司气质——品牌暗夜美学的共同作者。</p></div>
+        <div class="item"><b>勒·柯布西耶 / 粗野主义</b> <span>建筑谱系</span>
+          <p>故乡 Porterville 是"理解柯布西耶的量尺"；家具线以混凝土浇筑，与玛雅金字塔、包豪斯同列谱系。</p></div>
+        <div class="item"><b>Porterville → Hollywood → Paris</b> <span>三条线</span>
+          <p>天主教小镇的自律 × 洛杉矶地下圈的放逐 × 巴黎的祭坛建成——拧成品牌的骨架。</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+  <div class="footer">
+    <div class="brand">RICK&nbsp;OWENS</div>
+    <div class="motto">粗野不是冷酷<br>是把温柔浇筑成可以居住的形状</div>
+  </div>
+  <div class="rule thin"></div>
+</div>
+</body>
+</html>
